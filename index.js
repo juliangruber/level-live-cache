@@ -14,7 +14,7 @@ function Db (source) {
   if (!(this instanceof Db)) return new Db(source);
   Emitter.call(this);
 
-  this.clone = levelup('clone', { db: memdown });
+  this.cache = levelup('clone', { db: memdown });
   this.source = source;
   live.install(this.source);
 
@@ -31,7 +31,7 @@ inherits(Db, Emitter);
 
 Db.prototype.putEvents = function () {
   var self = this;
-  self.clone.on('put', function (key, value) {
+  self.cache.on('put', function (key, value) {
     self.emit(key, value);
   });
 };
@@ -46,7 +46,7 @@ Db.prototype.get = function (key, fn) {
   }
   self.getting.push(key);
 
-  self.clone.get(key, function (err, value) {
+  self.cache.get(key, function (err, value) {
     if (!err) {
       self.getting.splice(self.getting.indexOf(key), 1);
       fn(null, value);
@@ -55,14 +55,14 @@ Db.prototype.get = function (key, fn) {
     self.source.get(key, function (err, value) {
       self.getting.splice(self.getting.indexOf(key), 1);
       if (err) return fn(err);
-      self.clone.put(key, value, fn);
+      self.cache.put(key, value, fn);
     });
   });
 };
 
 Db.prototype.put = function (key, value, fn) {
   var self = this;
-  self.clone.put(key, value, function (err) {
+  self.cache.put(key, value, function (err) {
     fn(err);
     if (!err) {
       self.source.put(key, value, function (err) {
@@ -102,7 +102,6 @@ Db.prototype.createWriteStream = function (opts) {
 };
 
 Db.prototype.close = function () {
-  this.streams.forEach(call('destroy'));
   this.ranges.forEach(call('destroy'));
 };
 
@@ -162,4 +161,10 @@ Db.prototype.watchRange = function (opts) {
 Db.prototype.error = function () {
   return this.emit.bind(this, 'error');
 };
+
+function call (m) {
+  return function (o) {
+    o[m]();
+  }
+}
 
