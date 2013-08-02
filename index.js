@@ -1,6 +1,5 @@
 var Emitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
-var map = require('map-stream');
 var live = require('level-live-stream');
 var levelup = require('levelup');
 var memdown = function (l) { return new (require('memdown'))(l) };
