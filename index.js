@@ -84,8 +84,7 @@ Db.prototype.createReadStream = function (opts) {
 
   if (!range) {
     this.watchRange(opts);
-    this.source.createReadStream();
-    return;
+    return this.source.createReadStream(opts);
   }
 
   return range.synced
