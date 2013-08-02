@@ -18,7 +18,6 @@ function Db (source) {
   this.source = source;
   live.install(this.source);
 
-  this.streams = [];
   this.getting = [];
   this.ranges = [];
   this.putEvents();
