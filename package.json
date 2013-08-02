@@ -1,12 +1,12 @@
 {
-  "name": "level-persistent-client",
+  "name": "level-live-cache",
   "description": "",
   "version": "0.0.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/juliangruber/level-persistent-client.git"
+    "url": "git://github.com/juliangruber/level-live-cache.git"
   },
-  "homepage": "https://github.com/juliangruber/level-persistent-client",
+  "homepage": "https://github.com/juliangruber/level-live-cache",
   "main": "index.js",
   "scripts": {
     "test": "tape test/*.js"
