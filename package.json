@@ -12,11 +12,10 @@
     "test": "tape test/*.js"
   },
   "dependencies": {
-    "memdown": "~0.2.1",
-    "levelup": "~0.12.0",
     "level-live-stream": "~1.4.6",
     "through": "~2.3.4",
-    "obj": "~0.2.0"
+    "obj": "~0.2.0",
+    "memdb": "0.0.1"
   },
   "devDependencies": {
     "tape": "*"

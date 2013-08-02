@@ -1,8 +1,7 @@
 var Emitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 var live = require('level-live-stream');
-var levelup = require('levelup');
-var memdown = function (l) { return new (require('memdown'))(l) };
+var MemDB = require('memdb');
 var through = require('through');
 var o = require('obj');
 var Range = require('./lib/range');
@@ -13,7 +12,7 @@ function Db (source) {
   if (!(this instanceof Db)) return new Db(source);
   Emitter.call(this);
 
-  this.cache = levelup('clone', { db: memdown });
+  this.cache = MemDB();
   this.source = source;
   live.install(this.source);
 
