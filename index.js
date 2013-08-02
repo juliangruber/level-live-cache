@@ -50,6 +50,7 @@ Db.prototype.get = function (key, fn) {
     if (!err) {
       self.getting.splice(self.getting.indexOf(key), 1);
       fn(null, value);
+      return;
     }
 
     self.source.get(key, function (err, value) {
