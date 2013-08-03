@@ -52,6 +52,7 @@ test('keeps client updated', function (t, db, source, cache) {
 
   source.put('foo', 'bar', function (err) {
     t.error(err);
+
     // make sure client has data
     db.createReadStream().on('end', function () {
       source.put('bar', 'baz', function (err) {
