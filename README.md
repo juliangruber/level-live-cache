@@ -5,6 +5,8 @@ An in-memory cache that keeps up to date with its source.
 
 [![build status](https://secure.travis-ci.org/juliangruber/level-live-cache.png)](http://travis-ci.org/juliangruber/level-live-cache)
 
+[![testling badge](https://ci.testling.com/juliangruber/level-live-cache.png)](https://ci.testling.com/juliangruber/level-live-cache)
+
 ## Usage
 
 ```js
