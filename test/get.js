@@ -72,3 +72,16 @@ test('cache hit cleans up getting array', function (t, db, source, cache) {
     t.equal(db.getting.length, 1);
   });
 });
+
+test('source hit cleans up getting array', function (t, db, source, cache) {
+  t.plan(4);
+
+  source.put('foo', 'bar', function (err) {
+    db.get('foo', function (err, value) {
+      t.error(err);
+      t.equal(value, 'bar');
+      t.equal(db.getting.length, 0);
+    });
+    t.equal(db.getting.length, 1);
+  });
+});
