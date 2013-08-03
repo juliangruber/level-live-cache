@@ -61,6 +61,7 @@ Db.prototype.get = function (key, fn) {
 
 Db.prototype.put = function (key, value, fn) {
   var self = this;
+  // todo: watchKey?
   self.cache.put(key, value, function (err) {
     fn(err);
     if (!err) {
@@ -84,6 +85,7 @@ Db.prototype.createReadStream = function (opts) {
 
   if (!range) {
     this.watchRange(opts);
+    // todo: watchRange is already creating a stream
     return this.source.createReadStream(opts);
   }
 
