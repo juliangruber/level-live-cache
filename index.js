@@ -64,11 +64,7 @@ Db.prototype.put = function (key, value, fn) {
   // todo: watchKey?
   self.cache.put(key, value, function (err) {
     fn(err);
-    if (!err) {
-      self.source.put(key, value, function (err) {
-        if (err) self.emit('error', err);
-      });
-    }
+    if (!err) self.source.put(key, value, self.error());
   });
 };
 
