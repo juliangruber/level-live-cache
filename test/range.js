@@ -59,3 +59,10 @@ test('destroy', function (t) {
 });
 
 // too lazy...
+// encloses
+// isSubRange
+// equals
+// beginsBefore
+// beginsAfter
+// endsBefore
+// endsAfter
