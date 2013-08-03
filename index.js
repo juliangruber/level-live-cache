@@ -122,6 +122,7 @@ Db.prototype.watchRange = function (opts) {
 
     if (range.encloses(candidate)) {
       if (range.startsBefore(candidate)) {
+        // widen start
         var l = live(this.source, { start: range.start, end: candidate.start });
         candidate.unshift(l);
         candidate.start = range.start;
@@ -129,6 +130,7 @@ Db.prototype.watchRange = function (opts) {
       }
 
       if (range.endsAfter(candidate)) {
+        // widen end
         var l = live(this.source, { start: candidate.end, end: range.end });
         candidate.push(l);
         candidate.end = range.end;
@@ -139,14 +141,12 @@ Db.prototype.watchRange = function (opts) {
     }
   }
 
-  // need to add new range
+  // need to add range
   this.ranges.push(range);
 
   var l = live(this.source, opts);
   range.push(l);
   l.pipe(this.cache.createWriteStream());
-
-  return false;
 }
 
 Db.prototype.error = function () {
