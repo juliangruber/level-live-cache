@@ -99,8 +99,10 @@ Db.prototype.createWriteStream = function (opts) {
   return tr;
 };
 
-Db.prototype.close = function () {
+Db.prototype.close = function (fn) {
   this.ranges.forEach(call('destroy'));
+  this.ranges = [];
+  if (fn) process.nextTick(fn);
 };
 
 Db.prototype.watchKey = function (key) {
