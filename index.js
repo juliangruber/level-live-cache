@@ -126,27 +126,25 @@ Db.prototype.watchRange = function (opts) {
     if (r.isSubRange(range) || r.equals(range)) return true;
 
     if (r.encloses(range)) {
-      this.ranges.push(r);
-
       if (r.startsBefore(range)) {
         var l = live(this.source, { start: r.start, end: range.start });
-        r.push(l);
+        range.unshift(l);
+        range.start = r.start;
         l.pipe(this.cache.createWriteStream());
       }
 
       if (r.endsAfter(range)) {
         var l = live(this.source, { start: range.end, end: r.end });
-        r.push(l);
+        range.push(l);
+        range.end = r.end;
         l.pipe(this.cache.createWriteStream());
       }
 
-      range.destroy();
-      this.ranges.splice(i, 1);
       return;
     }
   }
 
-  // need to create new range
+  // need to add new range
   this.ranges.push(r);
 
   var l = live(this.source, opts);
