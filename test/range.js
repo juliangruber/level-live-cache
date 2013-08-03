@@ -70,7 +70,7 @@ test('find encloser', function (t) {
 
 // too lazy...
 // encloses
-// isSubRange
+// subRangeOf
 // equals
 // beginsBefore
 // beginsAfter

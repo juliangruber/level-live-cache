@@ -118,7 +118,7 @@ Db.prototype.watchRange = function (opts) {
   for (var i = this.ranges.length - 1; i > -1; i--) {
     var candidate = this.ranges[i];
 
-    if (range.isSubRange(candidate) || range.equals(candidate)) return;
+    if (range.subRangeOf(candidate) || range.equals(candidate)) return;
 
     if (range.encloses(candidate)) {
       if (range.startsBefore(candidate)) {
