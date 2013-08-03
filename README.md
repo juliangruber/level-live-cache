@@ -3,6 +3,8 @@
 
 An in-memory cache that keeps up to date with its source.
 
+[![build status](https://secure.travis-ci.org/juliangruber/level-live-cache.png)](http://travis-ci.org/juliangruber/level-live-cache)
+
 ## Usage
 
 ```js
