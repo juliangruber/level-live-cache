@@ -17,8 +17,6 @@ var source = MemDB(); // should be something like a multilevel client
 var cache = MemDB();
 
 var db = Cache(source, cache);
-// the first db - the source - should be
-// something like a multilevel client
 
 db.put('foo', 'bar', function (err) {
   if (err) throw err;
