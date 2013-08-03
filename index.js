@@ -81,7 +81,7 @@ Db.prototype.createValueStream = function (opts) {
 };
 
 Db.prototype.createReadStream = function (opts) {
-  var range = this.enclosingRange(opts);
+  var range = Range(opts).findEncloser(this.ranges);
 
   if (!range) {
     this.watchRange(opts);
@@ -110,15 +110,6 @@ Db.prototype.close = function (fn) {
 Db.prototype.watchKey = function (key) {
   return this.watchRange({ start: key, end: key });
 };
-
-Db.prototype.enclosingRange = function (opts) {
-  var r = new Range(opts);
-  for (var i = 0; i < this.ranges.length; i++) {
-    if (this.ranges[i].encloses(r)) return this.ranges[i];
-  }
-
-  return false;
-}
 
 Db.prototype.watchRange = function (opts) {
   var r = new Range(opts);
