@@ -112,26 +112,26 @@ Db.prototype.watchKey = function (key) {
 };
 
 Db.prototype.watchRange = function (opts) {
-  var r = new Range(opts);
+  var range = new Range(opts);
 
   // backwards because we're removing things
   for (var i = this.ranges.length - 1; i > -1; i--) {
-    var range = this.ranges[i];
+    var candidate = this.ranges[i];
 
-    if (r.isSubRange(range) || r.equals(range)) return true;
+    if (range.isSubRange(candidate) || range.equals(candidate)) return;
 
-    if (r.encloses(range)) {
-      if (r.startsBefore(range)) {
-        var l = live(this.source, { start: r.start, end: range.start });
-        range.unshift(l);
-        range.start = r.start;
+    if (range.encloses(candidate)) {
+      if (range.startsBefore(candidate)) {
+        var l = live(this.source, { start: range.start, end: candidate.start });
+        candidate.unshift(l);
+        candidate.start = range.start;
         l.pipe(this.cache.createWriteStream());
       }
 
-      if (r.endsAfter(range)) {
-        var l = live(this.source, { start: range.end, end: r.end });
-        range.push(l);
-        range.end = r.end;
+      if (range.endsAfter(candidate)) {
+        var l = live(this.source, { start: candidate.end, end: range.end });
+        candidate.push(l);
+        candidate.end = range.end;
         l.pipe(this.cache.createWriteStream());
       }
 
@@ -140,10 +140,10 @@ Db.prototype.watchRange = function (opts) {
   }
 
   // need to add new range
-  this.ranges.push(r);
+  this.ranges.push(range);
 
   var l = live(this.source, opts);
-  r.push(l);
+  range.push(l);
   l.pipe(this.cache.createWriteStream());
 
   return false;
