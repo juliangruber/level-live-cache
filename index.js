@@ -1,20 +1,19 @@
 var Emitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 var live = require('level-live-stream');
-var MemDB = require('memdb');
 var through = require('through');
 var o = require('obj');
 var Range = require('./lib/range');
 
 module.exports = Db;
 
-function Db (source) {
-  if (!(this instanceof Db)) return new Db(source);
+function Db (source, cache) {
+  if (!(this instanceof Db)) return new Db(source, cache);
   Emitter.call(this);
 
-  this.cache = MemDB();
   this.source = source;
   live.install(this.source);
+  this.cache = cache;
 
   this.getting = [];
   this.ranges = [];

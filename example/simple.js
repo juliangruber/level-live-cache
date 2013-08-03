@@ -1,9 +1,8 @@
 var levelup = require('levelup');
-var memdown = require('memdown');
+var MemDB = require('memdb');
 var Cache = require('..');
-var memdown = function (l) { return new (require('memdown'))(l) };
 
-var db = Cache(levelup('source', { db: memdown }));
+var db = Cache(MemDB(), MemDB());
 
 db.put('foo', 'bar', function (err) {
   if (err) throw err;

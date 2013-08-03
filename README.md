@@ -6,10 +6,15 @@ An in-memory cache that keeps up to date with its source.
 ## Usage
 
 ```js
+var MemDB = require('memdb');
 var Cache = require('level-live-cache');
 
-var source = multilevel.client(); // ...
-var db = Cache(source);
+var source = MemDB(); // should be something like a multilevel client
+var cache = MemDB();
+
+var db = Cache(source, cache);
+// the first db - the source - should be
+// something like a multilevel client
 
 db.put('foo', 'bar', function (err) {
   if (err) throw err;
@@ -36,9 +41,10 @@ source.put('foo', 'baz', function (err) {
 
 ## API
 
-### Cache(source)
+### Cache(source, cache)
 
-Return a new cache around `source`.
+Return a new levelup style db that caches `source` in `cache` and keeps both
+up to date.
 
 ## Installation
 

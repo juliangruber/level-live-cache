@@ -14,11 +14,11 @@
   "dependencies": {
     "level-live-stream": "~1.4.6",
     "through": "~2.3.4",
-    "obj": "~0.2.0",
-    "memdb": "0.0.1"
+    "obj": "~0.2.0"
   },
   "devDependencies": {
-    "tape": "*"
+    "tape": "~1.0.4",
+    "memdb": "0.0.1"
   },
   "keywords": [
     ""
