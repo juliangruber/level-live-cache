@@ -53,7 +53,8 @@ Db.prototype.get = function (key, fn) {
     self.source.get(key, function (err, value) {
       self.getting.splice(self.getting.indexOf(key), 1);
       if (err) return fn(err);
-      self.cache.put(key, value, fn);
+      fn(null, value);
+      self.cache.put(key, value, self.error());
     });
   });
 };
@@ -154,7 +155,9 @@ Db.prototype.watchRange = function (opts) {
 }
 
 Db.prototype.error = function () {
-  return this.emit.bind(this, 'error');
+  return function (err) {
+    if (err) this.emit('error', err);
+  };
 };
 
 function call (m) {
