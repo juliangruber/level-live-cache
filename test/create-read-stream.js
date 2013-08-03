@@ -30,3 +30,51 @@ test('reads data from source', function (t, db, source, cache) {
   });
 });
 
+test('caches data', function (t, db, source, cache) {
+  t.plan(4);
+
+  source.put('foo', 'bar', function (err) {
+    t.error(err);
+    // make sure client has data
+    db.createReadStream().on('end', function () {
+      cache.createReadStream().pipe(through(write, end));
+
+      function write (kv) {
+        t.equal(kv.key, 'foo');
+        t.equal(kv.value, 'bar');
+      }
+
+      function end () {
+        t.ok(true, 'ended');
+      }
+    });
+  });
+});
+
+test('keeps client updated', function (t, db, source, cache) {
+  t.plan(3);
+
+  source.put('foo', 'bar', function (err) {
+    t.error(err);
+    // make sure client has data
+    db.createReadStream().on('end', function () {
+      source.put('bar', 'baz', function (err) {
+        t.error(err);
+
+        // wait until cache has data
+        setTimeout(function () {
+          var res = [];
+          cache.createReadStream().pipe(through(write, end));
+          function write (kv) { res.push(kv) }
+          function end () {
+            t.deepEqual(res, [
+              { key: 'bar', value: 'baz' },
+              { key: 'foo', value: 'bar' }
+            ]);
+          }
+        }, 100);
+      });
+    });
+  });
+});
+
