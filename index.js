@@ -112,40 +112,39 @@ Db.prototype.watchKey = function (key) {
 };
 
 Db.prototype.watchRange = function (opts) {
-  var range = new Range(opts);
+  var r = new Range(opts);
 
-  // backwards because we're removing things
-  for (var i = this.ranges.length - 1; i > -1; i--) {
-    var candidate = this.ranges[i];
-
-    if (range.subRangeOf(candidate) || range.equals(candidate)) return;
-
-    if (range.encloses(candidate)) {
-      if (range.startsBefore(candidate)) {
-        // widen start
-        var l = live(this.source, { start: range.start, end: candidate.start });
-        candidate.unshift(l);
-        candidate.start = range.start;
-        l.pipe(this.cache.createWriteStream());
-      }
-
-      if (range.endsAfter(candidate)) {
-        // widen end
-        var l = live(this.source, { start: candidate.end, end: range.end });
-        candidate.push(l);
-        candidate.end = range.end;
-        l.pipe(this.cache.createWriteStream());
-      }
-
+  for (var i = 0; i < this.ranges.length; i++) {
+    var c = this.ranges[i]; // candidate
+    if (r.subRangeOf(c) || r.equals(c)) return;
+    if (r.encloses(c)) {
+      if (r.startsBefore(c)) widenStart(this, r, c);
+      if (r.endsAfter(c)) widenEnd(this, r, c);
       return;
     }
   }
 
-  // need to add range
-  this.ranges.push(range);
+  addRange(this, r, opts);
+};
 
-  var l = live(this.source, opts);
+function addRange (self, range, opts) {
+  self.ranges.push(range);
+  var l = live(self.source, opts);
   range.push(l);
+  l.pipe(self.cache.createWriteStream());
+}
+
+function widenStart (self, range, candidate) {
+  var l = live(self.source, { start: range.start, end: candidate.start });
+  candidate.unshift(l);
+  candidate.start = range.start;
+  l.pipe(self.cache.createWriteStream());
+}
+
+function widenEnd (self, range, candidate) {
+  var l = live(this.source, { start: candidate.end, end: range.end });
+  candidate.push(l);
+  candidate.end = range.end;
   l.pipe(this.cache.createWriteStream());
 }
 
