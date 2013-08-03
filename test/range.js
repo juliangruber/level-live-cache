@@ -58,6 +58,16 @@ test('destroy', function (t) {
   t.equal(r.streams.length, 0);
 });
 
+test('find encloser', function (t) {
+  var a = Range('50', '55');
+  var b = Range('40', '60');
+  var c = Range('45', '60');
+  var d = Range('55', '60');
+  t.equal(a.findEncloser([b, c]), b);
+  t.equal(a.findEncloser([d]), false);
+  t.end();
+});
+
 // too lazy...
 // encloses
 // isSubRange
