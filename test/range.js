@@ -6,7 +6,7 @@ test('start and end', function (t) {
   t.equal(Range({ start: 'start' }).start, 'start');
   t.equal(Range({ end: 'end' }).end, 'end');
   t.equal(Range().start, '');
-  t.equal(Range().end, '!');
+  t.equal(Range().end, '~');
   t.end();
 });
 
