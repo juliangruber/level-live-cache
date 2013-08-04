@@ -130,6 +130,8 @@ Db.prototype.watchRange = function (opts) {
 
 function addRange (self, range, opts) {
   self.ranges.push(range);
+  opts = opts || {};
+  opts.keys = opts.values = true;
   var live = self.source.createLiveStream(opts);
   range.push(live);
   live.pipe(self.cache.createWriteStream());
