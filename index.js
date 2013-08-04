@@ -12,7 +12,7 @@ function Db (source, cache) {
   Emitter.call(this);
 
   this.source = source;
-  live.install(this.source);
+  if (!source.createLiveStream) live.install(source);
   this.cache = cache;
 
   this.getting = [];
