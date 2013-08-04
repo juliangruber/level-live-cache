@@ -1,6 +1,6 @@
 var Emitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
-var live = require('level-live-stream');
+var liveStream = require('level-live-stream');
 var through = require('through');
 var o = require('obj');
 var Range = require('./lib/range');
@@ -12,7 +12,7 @@ function Db (source, cache) {
   Emitter.call(this);
 
   this.source = source;
-  if (!source.createLiveStream) live.install(source);
+  if (!source.createLiveStream) liveStream.install(source);
   this.cache = cache;
 
   this.getting = [];
@@ -125,23 +125,29 @@ Db.prototype.watchRange = function (opts) {
 
 function addRange (self, range, opts) {
   self.ranges.push(range);
-  var l = live(self.source, opts);
-  range.push(l);
-  l.pipe(self.cache.createWriteStream());
+  var live = self.source.createLiveStream(opts);
+  range.push(live);
+  live.pipe(self.cache.createWriteStream());
 }
 
 function widenStart (self, range, candidate) {
-  var l = live(self.source, { start: range.start, end: candidate.start });
-  candidate.unshift(l);
+  var live = self.source.createLiveStream({
+    start: range.start,
+    end: candidate.start
+  });
+  candidate.unshift(live);
   candidate.start = range.start;
-  l.pipe(self.cache.createWriteStream());
+  live.pipe(self.cache.createWriteStream());
 }
 
 function widenEnd (self, range, candidate) {
-  var l = live(this.source, { start: candidate.end, end: range.end });
-  candidate.push(l);
+  var live = this.source.createLiveStream({
+    start: candidate.end,
+    end: range.end
+  });
+  candidate.push(live);
   candidate.end = range.end;
-  l.pipe(this.cache.createWriteStream());
+  live.pipe(this.cache.createWriteStream());
 }
 
 Db.prototype.error = function () {
