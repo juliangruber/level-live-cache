@@ -48,6 +48,10 @@ source.put('foo', 'baz', function (err) {
 Return a new levelup style db that caches `source` in `cache` and keeps both
 up to date.
 
+This will install
+[level-live-stream](https://github.com/dominictarr/level-live-stream) on the
+`source`, if you didn't already do that.
+
 ## Installation
 
 With [npm](https://npmjs.org) do:
