@@ -97,6 +97,11 @@ Db.prototype.createWriteStream = function (opts) {
   return tr;
 };
 
+Db.prototype.createLiveStream = function (opts) {
+  this.watchRange(opts);
+  return liveStream(this.cache, opts);
+};
+
 Db.prototype.close = function (fn) {
   this.ranges.forEach(call('destroy'));
   this.ranges = [];
